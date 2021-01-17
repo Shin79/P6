@@ -1,0 +1,77 @@
+@font-face{
+    font-family: "roboto";
+    src: url("fonts/roboto-fontfacekit/web fonts/roboto_light_macroman/Roboto-Light-webfont.woff");
+}
+body{
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    font-family: "roboto",sans-serif;
+}
+.title{
+    border: 1px solid grey;
+    background-color: lightgrey;
+    border: none;
+    box-shadow:0px 10px 10px -10px #666;
+}
+.addBook,.search,.cancel{
+    background-color: rgb(100, 153, 20);
+    color: #FFF;
+    border-radius: 4px;
+    height: 40px;
+    width: 120px;
+    margin: 10px;
+}
+input:invalid{
+    border: 2px solid rgb(206,36,36);
+}
+img{
+    width: 100px;
+    height: 100px;
+}
+legend{
+    font-size: small;
+    text-align: start;
+}
+fieldset{
+    text-align: start;
+    font-size: small;
+}
+#author,#title{
+    width: 95%;
+    margin: 10px;
+}
+.cancel{
+    background-color: rgb(206, 36, 36);
+    display: block;
+}
+header{
+    background-color: #000;
+}
+img{
+    height: 30px;
+    width: 25px;
+}
+h2{
+    font-size: 85%;
+    font-weight: bolder;
+}
+#bookModel{
+    border: 1px solid lightgray;
+    background-color: lightgrey;
+    width: 50%;
+    border-radius: 5px;
+    text-align: start;  
+    margin: auto;
+}
+#bookmark{
+    float: right;
+    margin-right: 4px;
+    margin-top:-20px;
+}
+.unavailable{
+    display: block;
+    margin: auto;
+    width: 80%;
+    height: 80%;
+}
