@@ -7,8 +7,8 @@ $(function(){
     var $form = $("<section id='formulaire'></section>");
     $(".h2").after($form);
     $form.append("<form action='' method='get' class='form'><fieldset><legend>Insérer le titre et l'auteur : </legend></fieldset></form>");
-    var $title = $("fieldset").append("<label for='title'>Titre du livre * : </label><br/><input type='text' id='title' name='title' required pattern='[\w]{5,}'/>");
-    var $author = $("fieldset").append("<br/><label for='author'>Auteur * : </label><br/><input type='text' id='author' name='author' required pattern='[a-zA-Z]{3,}'/><br>");
+    var $title = $("fieldset").append("<label for='title'>Titre du livre * : </label><br/><input type='text' id='title' name='title' required/>");
+    var $author = $("fieldset").append("<br/><label for='author'>Auteur * : </label><br/><input type='text' id='author' name='author' required /><br>");
     var $search = createButton("submit",'search',"Chercher").appendTo("fieldset");
     var $cancel = createButton("reset",'cancel',"Annuler");
     $cancel.appendTo("fieldset");
@@ -50,18 +50,32 @@ $(function(){
     })
     $("#title").keyup(function(){
         var titre = $(this).val();
-        console.log(titre);
-        $.ajax({
-            url : "https://www.googleapis.com/books/v1/volumes?q=ISBN:",
-            type : "GET",
-            data : "user=" + titre,
-            success : function(data){
-                console.log("ça fonctionne",data);
-            },
-            error : function(err){
-                console.log("ça plante",err);
-            }
-        })
+        var auteur = $(this).val();
+        console.log(titre + auteur);
+        var recherche = titre + auteur;
+        if(titre.length>=3 & auteur.length>=3){      // S'il y a un minimum de 3 caractères, on lance l'appel AJAX
+                $.ajax({
+                    url : "https://www.googleapis.com/books/v1/volumes?q=" + recherche,
+                    method : "GET",
+                    data : titre + auteur,
+                    success : function(data){
+                        console.log("ça fonctionne",data);
+                        var htmlContent = "";
+                        for(var i=0;i<data.items.length;i++){
+                            console.log(htmlContent += "Titre : " + data.items[i].volumeInfo.title);
+                            console.log(htmlContent += "Auteur : " + data.items[i].volumeInfo.authors);
+                            if(titre == data.items[i].volumeInfo.title & author == data.items[i].volumeInfo.authors){
+                                $(".bookTitle").html(data.items[i].volumeInfo.title);
+                                $(".bookAuthor").html(data.items[i].volumeInfo.authors);
+                            }
+                        }
+                        
+                    },
+                    error : function(err){
+                        console.log("ça plante",err);
+                    }
+                })
+        }
     })
     $("#author").keyup(function(){
         var auteur = $(this).val();
@@ -78,17 +92,7 @@ $(function(){
         $(this).attr("src",src);
     })
 
-    // Requête AJAX
-    $.ajax({
-        url : "https://www.googleapis.com/books/v1/volumes?q=ISBN:",
-        type : "GET",
-        success : function(data){
-            console.log("ça fonctionne",data);
-        },
-        error : function(err){
-            console.log("ça plante",err);
-        }
-    })
+    
 });
 
 
