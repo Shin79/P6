@@ -52,7 +52,7 @@ $(function(){
         var titre = $(this).val();
         var auteur = $(this).val();
         console.log(titre + auteur);
-        var recherche = titre + ' ' + auteur;
+        var recherche = titre + '+inauthor:' + auteur;
         if(titre.length>=3 & auteur.length>=3){      // S'il y a un minimum de 3 caractères, on lance l'appel AJAX
                 $.ajax({
                     url : "https://www.googleapis.com/books/v1/volumes?q=" + recherche,
@@ -61,12 +61,12 @@ $(function(){
                     success : function(data){
                         console.log("ça fonctionne",data);
                         var htmlContent = "";
-                        var itemTemplate = $bookModel.html();
+                        var itemTemplate = $bookModel;
                         $(data.items).each(function(i){    // ou for(var i=0;i<data.items.length;i++){
                             console.log(data.items[i]);
                             console.log("Titre : " + data.items[i].volumeInfo.title);
                             console.log("Auteur : " + data.items[i].volumeInfo.authors);
-                            $searchResults.append(itemTemplate);
+                            $(itemTemplate).clone().appendTo($searchResults);
                             $(".bookTitle").text(data.items[i].volumeInfo.title);
                             $(".bookAuthor").text(data.items[i].volumeInfo.authors);
                         })
