@@ -21,17 +21,25 @@ $(function(){
     $("#content").before($searchResults);
     $searchResults.prepend("<h2>Résultats de recherche</h2>"); 
     $bookModel =  $('<div id="bookModel"></div>');
-    $bookTitle = $('<h4>Titre : <span class="bookTitle"></span></h4>');
-    $bookId = $('<h5>Id : <span class="bookId"></span></h5>');
-    $bookAuthor = $('<h5>Auteur : <span class="bookAuthor"></span></h5>');
-    $bookDescription = $('<h5>Description : <span class="bookDescription"></span></h5>');
+    $bookTitle = $('<h4>Titre : </h4>');
+    $titleOutput = $('<span class="bookTitle"></span>');
+    $bookId = $('<h5>Id : </h5>');
+    $idOutput = $('<span class="bookId">');
+    $bookAuthor = $('<h5>Auteur : </h5>');
+    $authorOutput = $('<span class="bookAuthor"></span>')
+    $bookDescription = $('<h5>Description : </h5>');
+    $descriptionOutput = $('<span class="bookDescription"></span>');
     $bookmarkLink = $('<a id="bookmark" href="#"></a>');
     $bookmarkIcon = $('<img src="logo/bookmark-regular.svg"/>');
     $bookPicture = $('<img class="unavailable" src="logo/unavailable.png"/>');
     $('#searchResults').append($bookModel);
+    $($bookTitle).append($titleOutput);
     $('#bookModel').append($bookTitle);
+    $($bookId).append($idOutput);
     $('#bookModel').append($bookId);
+    $($bookAuthor).append($authorOutput);
     $('#bookModel').append($bookAuthor);
+    $($bookDescription).append($descriptionOutput)
     $('#bookModel').append($bookDescription);
     $('#bookModel').append($bookPicture);
     $($bookTitle).append($bookmarkLink);
@@ -52,25 +60,46 @@ $(function(){
         var titre = $(this).val();
         var auteur = $(this).val();
         console.log(titre + auteur);
-        var recherche = titre + '+inauthor:' + auteur;
-        if(titre.length>=3 & auteur.length>=3){      // S'il y a un minimum de 3 caractères, on lance l'appel AJAX
+        var recherche = 'intitle:' + titre + '+inauthor:' + auteur ;
+        if(titre.length>=3) {
+            //& auteur.length>=3){      // S'il y a un minimum de 3 caractères, on lance l'appel AJAX
                 $.ajax({
-                    url : "https://www.googleapis.com/books/v1/volumes?q=" + recherche,
+                    url : "https://www.googleapis.com/books/v1/volumes?q=" + recherche ,
                     method : "GET",
                     data : titre + auteur,
                     success : function(data){
                         console.log("ça fonctionne",data);
                         var htmlContent = "";
-                        var itemTemplate = $bookModel;
-                        $(data.items).each(function(i){    // ou for(var i=0;i<data.items.length;i++){
+                        //var itemTemplate = $bookModel;
+                        $(data.items).each(function(i){      // for(var i=0;i<data.items.length;i++){
+                            var itemTemplate = $bookModel;
                             console.log(data.items[i]);
                             console.log("Titre : " + data.items[i].volumeInfo.title);
                             console.log("Auteur : " + data.items[i].volumeInfo.authors);
-                            $(itemTemplate).clone().appendTo($searchResults);
-                            $(".bookTitle").text(data.items[i].volumeInfo.title);
-                            $(".bookAuthor").text(data.items[i].volumeInfo.authors);
-                        })
+                            console.log(data.items[i].volumeInfo.description);
+                            $titleOutput.text(data.items[i].volumeInfo.title);     // On implémente les données du titre reçues
+                            $idOutput.text(data.items[i].volumeInfo.id);
+                            $authorOutput.text(data.items[i].volumeInfo.authors);  // On implémente les données de l'auteur reçues
+                            if ($descriptionOutput.text().length<200){
+                            $descriptionOutput.text(data.items[i].volumeInfo.description);
+                            }
+                            // On limite la description à 200 caractères max
+                            console.log($descriptionOutput.text().length);      
+                            if($descriptionOutput.text().length>200){
+                                console.log($descriptionOutput.text());
+                                var desc = data.items[i].volumeInfo.description;
+                                var sub = desc.substring(0,200);
+                                console.log(sub);
+                                $descriptionOutput.text(sub);
+                                console.log($descriptionOutput.text().length); 
+                            }
+                            $(itemTemplate).clone().appendTo($searchResults);      
+                        })    
                             
+                            $("img").click(function(){
+                                var src = ($(this).attr("src") === "logo/bookmark-regular.svg") ? "logo/bookmark-solid.svg":"logo/bookmark-regular.svg";
+                                $(this).attr("src",src);
+                            })
                     },
                     error : function(err){
                         console.log("ça plante",err);
@@ -88,7 +117,7 @@ $(function(){
     })
 
     // On switche le bookmark au clic
-    $bookmarkIcon.click(function(){
+    $("img").click(function(){
         var src = ($(this).attr("src") === "logo/bookmark-regular.svg") ? "logo/bookmark-solid.svg":"logo/bookmark-regular.svg";
         $(this).attr("src",src);
     })
