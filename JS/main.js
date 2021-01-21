@@ -10,7 +10,7 @@ $(function(){
     var $title = $("fieldset").append("<label for='title'>Titre du livre * : </label><br/><input type='text' id='titleInput' name='title' required/>"); 
     var $author = $("fieldset").append("<br/><label for='author'>Auteur * : </label><br/><input type='text' id='authorInput' name='author'required/><br>"); 
     var $search = createButton("submit",'search',"Chercher").appendTo("fieldset");
-    $('.search').after('<div class="missingInfo"></div>');
+    $('.search').after('<div class="errorMessage"></div>');
     var $cancel = createButton("reset",'cancel',"Annuler");
     $cancel.appendTo("fieldset");
     
@@ -35,6 +35,7 @@ $(function(){
     })
     $(".search").click(function(event){
         event.preventDefault();
+        $(".errorMessage").text("");
         var titre = $("#titleInput").val();
         var auteur = $("#authorInput").val();
         console.log(titre + auteur);
@@ -46,21 +47,24 @@ $(function(){
                     data : titre + auteur,
                     success : function(data){
                         console.log("ça fonctionne",data);
-                        $(data.items).each(function(i){      // for(var i=0;i<data.items.length;i++){
-                            console.log(data.items[i]);
-                            console.log("Titre : " + data.items[i].volumeInfo.title);
-                            console.log("Auteur : " + data.items[i].volumeInfo.authors);
-                            console.log(data.items[i].volumeInfo.description);
-                            $searchResults.append(createBook(data.items[i]));
-                        })    
+                        if(data.totalItems === 0){
+                            $(".errorMessage").text("Désolé, aucun livre n'a été trouvé");
+                        }else{
+                            $(data.items).each(function(i){      // for(var i=0;i<data.items.length;i++){
+                                console.log(data.items[i]);
+                                console.log("Titre : " + data.items[i].volumeInfo.title);
+                                console.log("Auteur : " + data.items[i].volumeInfo.authors);
+                                console.log(data.items[i].volumeInfo.description);
+                                $searchResults.append(createBook(data.items[i]));
+                            })    
+                        }
                     },
                     error : function(err){
                         console.log("ça plante",err);
                     }
                 })
         } else{                                                             // Sinon, on lance un message d'erreur 
-            $(".missingInfo").text("Informations manquantes. Vous devez remplir les deux champs");
-            
+            $(".errorMessage").text("Informations manquantes. Vous devez remplir les deux champs");
         }
     })
     $("#author").keyup(function(){
