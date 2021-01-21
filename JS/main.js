@@ -6,10 +6,11 @@ $(function(){
     // Création d'une section contenant l'affichage lors du clic sur "Ajouter un livre"
     var $form = $("<section id='formulaire'></section>");
     $(".h2").after($form);
-    $form.append("<form action='' method='get' class='form'><fieldset><legend>Insérer le titre et l'auteur : </legend></fieldset></form>");
+    $form.append("<form action='' method='get' id='mainForm'><fieldset><legend>Insérer le titre et l'auteur : </legend></fieldset></form>");
     var $title = $("fieldset").append("<label for='title'>Titre du livre * : </label><br/><input type='text' id='titleInput' name='title' required/>"); 
-    var $author = $("fieldset").append("<br/><label for='author'>Auteur * : </label><br/><input type='text' id='authorInput' name='author' required/><br>"); 
+    var $author = $("fieldset").append("<br/><label for='author'>Auteur * : </label><br/><input type='text' id='authorInput' name='author'required/><br>"); 
     var $search = createButton("submit",'search',"Chercher").appendTo("fieldset");
+    $('.search').after('<div class="missingInfo"></div>');
     var $cancel = createButton("reset",'cancel',"Annuler");
     $cancel.appendTo("fieldset");
     
@@ -32,14 +33,13 @@ $(function(){
         $form.hide();
         $addBook.show();
     })
-
     $(".search").click(function(event){
         event.preventDefault();
         var titre = $("#titleInput").val();
         var auteur = $("#authorInput").val();
         console.log(titre + auteur);
         var recherche = 'intitle:' + titre + '+inauthor:' + auteur ;
-        if(titre.length>=3 && auteur.length>=3) {      // S'il y a un minimum de 3 caractères, on lance l'appel AJAX
+        if(titre!=""  && auteur!="") {      // Si les deux champs sont remplis, on lance la requête AJAX
                 $.ajax({
                     url : "https://www.googleapis.com/books/v1/volumes?q=" + recherche ,
                     method : "GET",
@@ -58,7 +58,8 @@ $(function(){
                         console.log("ça plante",err);
                     }
                 })
-        } else{
+        } else{                                                             // Sinon, on lance un message d'erreur 
+            $(".missingInfo").text("Informations manquantes. Vous devez remplir les deux champs");
             
         }
     })
@@ -70,7 +71,7 @@ $(function(){
         console.log($("#titleInput").val());
         console.log($("#authorInput").val());
     })
-
+    
     
     
 });
