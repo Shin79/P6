@@ -9,7 +9,7 @@ $(function(){
     $form.append("<form action='' method='get' id='mainForm'><fieldset><legend>Insérer le titre et l'auteur : </legend></fieldset></form>");
     var $title = $("fieldset").append("<label for='title'>Titre du livre * : </label><br/><input type='text' id='titleInput' name='title' required/>"); 
     var $author = $("fieldset").append("<br/><label for='author'>Auteur * : </label><br/><input type='text' id='authorInput' name='author'required/><br>"); 
-    var $search = createButton("submit",'search',"Chercher").appendTo("fieldset");
+    var $search = createButton("submit",'search',"Rechercher").appendTo("fieldset");
     $('.search').after('<div class="errorMessage"></div>');
     var $cancel = createButton("reset",'cancel',"Annuler");
     $cancel.appendTo("fieldset");
@@ -20,7 +20,7 @@ $(function(){
     // Création d'une section résultats de recherche 
     var $searchResults = $("<section id='searchResults'></section>");
     $("#content").before($searchResults);
-    $searchResults.prepend("<h2>Résultats de recherche</h2>"); 
+    $searchResults.before("<h2 class='searchR'>Résultats de recherche</h2>"); 
 
     // On ajoute l'évènement click sur le bouton "Ajouter un livre"
     $addBook.click(function(){
@@ -33,6 +33,10 @@ $(function(){
         $form.hide();
         $addBook.show();
     })
+    // On ajoute un tableau qui sera caché
+    $table = $("#content").append("<table id='table'><thead><tr><th>Titre</th><th>ID</th><th>Auteur</th><th>Description</th><th>Image</th><th>Supprimer</th></tr></thead></table>").hide();
+    
+      console.log(sessionStorage.getItem("savedBooks"));
     $(".search").click(function(event){
         event.preventDefault();
         $(".errorMessage").text("");
@@ -47,6 +51,7 @@ $(function(){
                     data : titre + auteur,
                     success : function(data){
                         console.log("ça fonctionne",data);
+                        search = data.items;
                         if(data.totalItems === 0){
                             $(".errorMessage").text("Désolé, aucun livre n'a été trouvé");
                         }else{
@@ -56,6 +61,11 @@ $(function(){
                                 console.log("Auteur : " + data.items[i].volumeInfo.authors);
                                 console.log(data.items[i].volumeInfo.description);
                                 $searchResults.append(createBook(data.items[i]));
+                                $bookmarkIcon.click(function(){
+                                    $table.show();
+                                    bookStorage(data.items[i].id);
+                                })
+                                
                             })    
                         }
                     },
