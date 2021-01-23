@@ -1,3 +1,4 @@
+
 // Fonction pour la création d'un bouton
 function createButton(type,classe,value) {
     return  $('<input/>',{
@@ -31,24 +32,81 @@ function createBook(book){
         picture = book.volumeInfo.imageLinks.thumbnail;                  
     }
     $bookPicture = $('<img class="unavailable" src="' + picture + '" alt="couverture du livre" title="Couverture"/>');        
-    $('#searchResults').append($bookModel);
     $($bookTitle).append($titleOutput);
-    $('#bookModel').append($bookTitle);
-    $($bookId).append($idOutput);
-    $('#bookModel').append($bookId);
-    $($bookAuthor).append($authorOutput);
-    $('#bookModel').append($bookAuthor);
-    $($bookDescription).append($descriptionOutput)
-    $('#bookModel').append($bookDescription);
-    $('#bookModel').append($bookPicture);
     $($bookTitle).prepend($bookmarkIcon);
+    $($bookId).append($idOutput);
+    $($bookAuthor).append($authorOutput);
+    $($bookDescription).append($descriptionOutput)
+    $bookModel.append($bookTitle);
+    $bookModel.append($bookId);
+    $bookModel.append($bookAuthor);
+    $bookModel.append($bookDescription);
+    $bookModel.append($bookPicture);
     
     // On switche le bookmark au clic
-    $bookmarkIcon.click(function(e){
-        e.preventDefault();
-        console.log(books.id)
-        var src = ($(this).attr("src") === "logo/bookmark-regular.svg") ? "logo/bookmark-solid.svg":"logo/bookmark-regular.svg";
-        $(this).attr("src",src);
+   $bookmarkIcon.click(function(e){
+    e.preventDefault();
+    console.log(book.id)
+    var src = ($(this).attr("src") === "logo/bookmark-regular.svg") ? "logo/bookmark-solid.svg":"logo/bookmark-regular.svg";
+    $(this).attr("src",src);
+    $("#content").append($bookModel);
+    
     })
     return $bookModel;
+};
+var pochList = [];
+    if (sessionStorage.getItem("savedBooks")) {
+        pochList = JSON.parse(sessionStorage.getItem("savedBooks"));
+        displayFavorite();
+      }
+function bookStorage(bookId){
+    var book = search.filter(book =>book.id === bookId);
+    console.log(book);
+    var title = book[0].volumeInfo.title;   
+    var author = book[0].volumeInfo.authors;
+    var id = book[0].id;
+    var image;
+  if (!book[0].volumeInfo.imageLinks) {
+    image = "assets/unavailable.png"
+  } else {
+    image = book[0].volumeInfo.imageLinks.smallThumbnail;
+  }
+  var description = book[0].volumeInfo.description;
+    if(description){
+        description = description.length>200 ? description.substring(0,50) +'...' : description; 
+    } else{
+        description = "Pas de description";
     }
+  const bookSaved = {
+    id: id,
+    title: title,
+    author: author,
+    image: image,
+    description: description
+  }
+  console.log(bookSaved);
+  if (pochList !== undefined) {
+    console.log(pochList);
+    if (pochList.some(book => book.id === bookSaved.id)) {
+      alert("Vous ne pouvez ajouter deux fois le même livre !");
+    } else {
+      pochList.push(bookSaved);
+      sessionStorage.setItem('savedBooks', JSON.stringify(pochList));
+      alert("Votre nouveau livre est dans votre Poch'List !");
+    }
+  } else {
+    pochList = [];
+
+    pochList.push(bookSaved);
+    sessionStorage.setItem('savedBooks', JSON.stringify(pochList));
+    alert("Votre premier livre est dans votre Poch'List !");
+  }
+  displayFavorite();
+}
+// Fonction pour ajouter 
+function displayFavorite(){
+    for(var i=0;i<pochList.length;i++){
+    $bookRow = $("#table").append(`<tr><td scope='row'>${pochList[i].title}</td><td>${pochList[i].id}</td><td>${pochList[i].author}</td><td class=""dscpt>${pochList[i].description}</td><td>${pochList[i].image}</td><td><a><img src="logo/trash-solid.svg"/></a></td></tr>`)
+    }
+    
+} 
