@@ -49,16 +49,31 @@ function createBook(book){
     console.log(book.id)
     var src = ($(this).attr("src") === "logo/bookmark-regular.svg") ? "logo/bookmark-solid.svg":"logo/bookmark-regular.svg";
     $(this).attr("src",src);
-    $("#content").append($bookModel);
-    
     })
     return $bookModel;
 };
+
 var pochList = [];
     if (sessionStorage.getItem("savedBooks")) {
         pochList = JSON.parse(sessionStorage.getItem("savedBooks"));
         displayFavorite();
       }
+
+function deleteBook(bookId) {
+    pochList = pochList.filter(book => book.id === bookId);
+    console.log(pochList[0].id);
+    $('tr').remove("." + pochList[0].id);
+    pochList = pochList.filter(book => book.id !== bookId);
+    if(pochList.length>0){
+    console.log(pochList);
+    sessionStorage.setItem('savedBooks', JSON.stringify(pochList));
+    console.log(sessionStorage);
+    alert( "Le livre a été supprimé de vos favoris ");
+    } else{
+      $("#table").hide();
+    }
+    displayFavorite()
+}
 function bookStorage(bookId){
     var book = search.filter(book =>book.id === bookId);
     console.log(book);
@@ -66,8 +81,8 @@ function bookStorage(bookId){
     var author = book[0].volumeInfo.authors;
     var id = book[0].id;
     var image;
-  if (!book[0].volumeInfo.imageLinks) {
-    image = "assets/unavailable.png"
+  if(!book[0].volumeInfo.imageLinks) {
+    image = "logo/unavailable.png";
   } else {
     image = book[0].volumeInfo.imageLinks.smallThumbnail;
   }
@@ -88,25 +103,29 @@ function bookStorage(bookId){
   if (pochList !== undefined) {
     console.log(pochList);
     if (pochList.some(book => book.id === bookSaved.id)) {
-      alert("Vous ne pouvez ajouter deux fois le même livre !");
+      alert("Vous ne pouvez ajouter deux fois le même livre!");
     } else {
       pochList.push(bookSaved);
       sessionStorage.setItem('savedBooks', JSON.stringify(pochList));
-      alert("Votre nouveau livre est dans votre Poch'List !");
+      alert("Vous avez ajouté un nouveau livre dans les favoris!");
     }
   } else {
     pochList = [];
 
     pochList.push(bookSaved);
     sessionStorage.setItem('savedBooks', JSON.stringify(pochList));
-    alert("Votre premier livre est dans votre Poch'List !");
+    alert("Vous avez ajouté un premier livre dans les favoris !");
   }
   displayFavorite();
 }
-// Fonction pour ajouter 
+// Fonction pour afficher le favori
 function displayFavorite(){
+    
+    $(".maPochList").html("");
     for(var i=0;i<pochList.length;i++){
-    $bookRow = $("#table").append(`<tr><td scope='row'>${pochList[i].title}</td><td>${pochList[i].id}</td><td>${pochList[i].author}</td><td class=""dscpt>${pochList[i].description}</td><td>${pochList[i].image}</td><td><a><img src="logo/trash-solid.svg"/></a></td></tr>`)
+      $bookRow = $("#table").append(`<tr class='${pochList[i].id}'><td scope='row'>${pochList[i].title}</td><td>${pochList[i].id}</td><td>${pochList[i].author}</td><td class=""dscpt>${pochList[i].description}</td><td><img src='${pochList[i].image}'/></td><td><a ><img src="logo/trash-solid.svg" class="trash" onclick="deleteBook('${pochList[i].id}')"/></a></td></tr>`);
+      console.log(pochList[i].id);
     }
     
 } 
+
