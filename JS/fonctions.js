@@ -24,7 +24,8 @@ function createBook(book){
         txt = "Pas de description";
     }
     $descriptionOutput = $('<span class="bookDescription">' + txt + '</span>');
-    $bookmarkIcon = $('<img id="bookmark" src="logo/bookmark-regular.svg"/>');
+    $bookmarkIcon = $(`<img id="${book.id}"  class="bookmark" src="logo/bookmark-regular.svg"/>`);
+
     let picture;
     if(!book.volumeInfo.imageLinks){
         picture = "logo/unavailable.png"; 
@@ -60,19 +61,25 @@ var pochList = [];
       }
 
 function deleteBook(bookId) {
-    pochList = pochList.filter(book => book.id === bookId);
-    console.log(pochList[0].id);
-    $('tr').remove("." + pochList[0].id);
+    //pochList = pochList.filter(book => book.id === bookId);
+    //console.log(pochList[0].id);
+    //$('tr').remove("." + pochList[0].id);
     pochList = pochList.filter(book => book.id !== bookId);
-    if(pochList.length>0){
     console.log(pochList);
-    sessionStorage.setItem('savedBooks', JSON.stringify(pochList));
-    console.log(sessionStorage);
-    alert( "Le livre a été supprimé de vos favoris ");
-    } else{
-      $("#table").hide();
-    }
-    displayFavorite()
+    //if(pochList.length>0){
+    //    console.log(pochList);
+        sessionStorage.setItem('savedBooks', JSON.stringify(pochList));
+        console.log(sessionStorage);
+        alert( "Le livre a été supprimé de vos favoris ");
+        displayFavorite();
+        let  imgId = document.getElementById(bookId);
+        var src = ($("#" + bookId).attr("src") === "logo/bookmark-regular.svg") ? "logo/bookmark-solid.svg":"logo/bookmark-regular.svg";
+        $( "#" + bookId).attr("src",src);
+    //} else{
+      if(pochList.length<1){
+        $("#table").hide();
+      }
+    
 }
 function bookStorage(bookId){
     var book = search.filter(book =>book.id === bookId);
@@ -121,7 +128,8 @@ function bookStorage(bookId){
 // Fonction pour afficher le favori
 function displayFavorite(){
     
-    $(".maPochList").html("");
+    $("#table").html("");
+    $(".maPochList").prepend("<table id='table'><thead><tr><th>Titre</th><th>ID</th><th>Auteur</th><th>Description</th><th>Image</th><th>Supprimer</th></tr></thead></table>")
     for(var i=0;i<pochList.length;i++){
       $bookRow = $("#table").append(`<tr class='${pochList[i].id}'><td scope='row'>${pochList[i].title}</td><td>${pochList[i].id}</td><td>${pochList[i].author}</td><td class=""dscpt>${pochList[i].description}</td><td><img src='${pochList[i].image}'/></td><td><a ><img src="logo/trash-solid.svg" class="trash" onclick="deleteBook('${pochList[i].id}')"/></a></td></tr>`);
       console.log(pochList[i].id);
