@@ -13,6 +13,7 @@ $(function(){
     $('.search').after('<div class="errorMessage"></div>');
     var $cancel = createButton("reset",'cancel',"Annuler");
     $cancel.appendTo("fieldset");
+
     
     // On cache le formulaire sur la page initiale
     $form.hide();
@@ -20,7 +21,7 @@ $(function(){
     // Création d'une section résultats de recherche 
     var $searchResults = $("<section id='searchResults'></section>");
     $("#content").before($searchResults);
-    $searchResults.before("<h2 class='searchR'>Résultats de recherche</h2>"); 
+        
 
     // On ajoute l'évènement click sur le bouton "Ajouter un livre"
     $addBook.click(function(){
@@ -32,13 +33,19 @@ $(function(){
     $cancel.click(function(){
         $form.hide();
         $addBook.show();
+        $searchResults.hide();
+        $(".searchR").hide();
     })
     // On ajoute un tableau qui sera caché
-    $table = $("#content").append("<table id='table'><thead><tr><th>Titre</th><th>ID</th><th>Auteur</th><th>Description</th><th>Image</th><th>Supprimer</th></tr></thead></table>").hide();
+    $("#content").append("<div class='maPochList'></div>");
+    displayFavorite();
+    
     
       console.log(sessionStorage.getItem("savedBooks"));
     $(".search").click(function(event){
         event.preventDefault();
+        $("#searchResults").empty();
+        $(".searchR").empty();
         $(".errorMessage").text("");
         var titre = $("#titleInput").val();
         var auteur = $("#authorInput").val();
@@ -55,6 +62,7 @@ $(function(){
                         if(data.totalItems === 0){
                             $(".errorMessage").text("Désolé, aucun livre n'a été trouvé");
                         }else{
+                            $searchResults.before("<h2 class='searchR'>Résultats de recherche</h2>");
                             $(data.items).each(function(i){      // for(var i=0;i<data.items.length;i++){
                                 console.log(data.items[i]);
                                 console.log("Titre : " + data.items[i].volumeInfo.title);
@@ -62,10 +70,8 @@ $(function(){
                                 console.log(data.items[i].volumeInfo.description);
                                 $searchResults.append(createBook(data.items[i]));
                                 $bookmarkIcon.click(function(){
-                                    $table.show();
                                     bookStorage(data.items[i].id);
                                 })
-                                
                             })    
                         }
                     },
@@ -73,20 +79,12 @@ $(function(){
                         console.log("ça plante",err);
                     }
                 })
+                $searchResults.show();
+                //$(".search").prop("disabled",true);
         } else{                                                             // Sinon, on lance un message d'erreur 
             $(".errorMessage").text("Informations manquantes. Vous devez remplir les deux champs");
         }
     })
-    $("#author").keyup(function(){
-        var auteur = $(this).val();
-        console.log(auteur);
-    })
-    $search.click(function(){
-        console.log($("#titleInput").val());
-        console.log($("#authorInput").val());
-    })
-    
-    
     
 });
 
