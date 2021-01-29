@@ -14,9 +14,9 @@ function createBook(book){
     $titleOutput = $('<span class="bookTitle">' + book.volumeInfo.title + '</span>');
     $bookId = $('<h5>Id : </h5>');
     $idOutput = $('<span class="bookId">' + book.id + '</span>');
-    $bookAuthor = $('<h5>Auteur : </h5>');
-    $authorOutput = $('<span class="bookAuthor">' + book.volumeInfo.authors + '</span>')
-    $bookDescription = $('<h5>Description : </h5>');
+    $bookAuthor = $('<h5>Auteur :                          </h5>');
+    $authorOutput = $('<span class="bookAuthor">     ' + book.volumeInfo.authors + '</span>')
+    $bookDescription = $('<h5 class="descr">Description : </h5>');
     let txt;
     if(book.volumeInfo.description){
         txt = book.volumeInfo.description.length>200 ? book.volumeInfo.description.substring(0,200) +'...' : book.volumeInfo.description; 
@@ -32,6 +32,7 @@ function createBook(book){
     } else {
         picture = book.volumeInfo.imageLinks.thumbnail;                  
     }
+    //On créé la structure HTML du template
     $bookPicture = $('<img class="unavailable" src="' + picture + '" alt="couverture du livre" title="Couverture"/>');        
     $($bookTitle).append($titleOutput);
     $($bookTitle).prepend($bookmarkIcon);
@@ -54,12 +55,14 @@ function createBook(book){
     return $bookModel;
 };
 
+// On récupère les données depuis Session Storage
 var pochList = [];
     if (sessionStorage.getItem("savedBooks")) {
         pochList = JSON.parse(sessionStorage.getItem("savedBooks"));
         displayFavorite();
       }
 
+// On créé une fonction de suppression de livre de la liste des favoris
 function deleteBook(bookId) {
     //pochList = pochList.filter(book => book.id === bookId);
     //console.log(pochList[0].id);
@@ -81,6 +84,8 @@ function deleteBook(bookId) {
       }
     
 }
+
+// On créé une fonction pour stocker les favoris dans Session Storage
 function bookStorage(bookId){
     var book = search.filter(book =>book.id === bookId);
     console.log(book);
@@ -109,7 +114,7 @@ function bookStorage(bookId){
   console.log(bookSaved);
   if (pochList !== undefined) {
     console.log(pochList);
-    if (pochList.some(book => book.id === bookSaved.id)) {
+    if (pochList.some(book => book.id === bookSaved.id)) {  // On vérifie que l'ID du livre n'est pas déjà présent dans les données enregistrées
       alert("Vous ne pouvez ajouter deux fois le même livre!");
     } else {
       pochList.push(bookSaved);
@@ -125,15 +130,16 @@ function bookStorage(bookId){
   }
   displayFavorite();
 }
+
 // Fonction pour afficher le favori
 function displayFavorite(){
-    
-    $("#table").html("");
-    $(".maPochList").prepend("<table id='table'><thead><tr><th>Titre</th><th>ID</th><th>Auteur</th><th>Description</th><th>Image</th><th>Supprimer</th></tr></thead></table>")
-    for(var i=0;i<pochList.length;i++){
-      $bookRow = $("#table").append(`<tr class='${pochList[i].id}'><td scope='row'>${pochList[i].title}</td><td>${pochList[i].id}</td><td>${pochList[i].author}</td><td class=""dscpt>${pochList[i].description}</td><td><img src='${pochList[i].image}'/></td><td><a ><img src="logo/trash-solid.svg" class="trash" onclick="deleteBook('${pochList[i].id}')"/></a></td></tr>`);
-      console.log(pochList[i].id);
-    }
-    
+  if(pochList.length>0){
+      $("#table").html("");
+      $table = $(".maPochList").prepend("<table id='table'><thead><tr><th>Titre</th><th>ID</th><th>Auteur</th><th>Description</th><th>Image</th><th>Supprimer</th></tr></thead></table>");
+      for(var i=0;i<pochList.length;i++){
+          $bookRow = $("#table").append(`<tr class='${pochList[i].id}'><td data-label='Titre' scope='row'>${pochList[i].title}</td><td data-label='Id'>${pochList[i].id}</td><td data-label='Auteur'>${pochList[i].author}</td><td class=""dscpt data-label='Description'>${pochList[i].description}</td><td data-label='Image'><img src='${pochList[i].image}'/></td><td data-label='Supprimer'><a ><img src="logo/trash-solid.svg" class="trash" onclick="deleteBook('${pochList[i].id}')"/></a></td></tr>`);
+          console.log(pochList[i].id);
+      }
+  }
 } 
 

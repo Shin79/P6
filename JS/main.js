@@ -3,7 +3,7 @@ $(function(){
     // Création du bouton "Ajouter un livre"
     var $addBook = createButton("button","addBook","Ajouter un livre").insertAfter("#myBooks .h2");
 
-    // Création d'une section contenant l'affichage lors du clic sur "Ajouter un livre"
+    // Création d'une section contenant l'affichage du formulaire lors du clic sur "Ajouter un livre"
     var $form = $("<section id='formulaire'></section>");
     $(".h2").after($form);
     $form.append("<form action='' method='get' id='mainForm'><fieldset><legend>Insérer le titre et l'auteur : </legend></fieldset></form>");
@@ -36,12 +36,13 @@ $(function(){
         $searchResults.hide();
         $(".searchR").hide();
     })
-    // On ajoute un tableau qui sera caché
+    
+    // On ajoute un tableau pour afficher les favoris
     $("#content").append("<div class='maPochList'></div>");
     displayFavorite();
     
-    
-      console.log(sessionStorage.getItem("savedBooks"));
+    // On ajoute l'évènement click sur le bouton "Rechercher"
+    console.log(sessionStorage.getItem("savedBooks"));
     $(".search").click(function(event){
         event.preventDefault();
         $("#searchResults").empty();
@@ -69,6 +70,7 @@ $(function(){
                                 console.log("Auteur : " + data.items[i].volumeInfo.authors);
                                 console.log(data.items[i].volumeInfo.description);
                                 $searchResults.append(createBook(data.items[i]));
+                                // On ajoute l'évènement click sur l'icône bookmark
                                 $bookmarkIcon.click(function(){
                                     bookStorage(data.items[i].id);
                                 })
