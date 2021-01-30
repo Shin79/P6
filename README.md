@@ -1,0 +1,27 @@
+# P6  Poch'Lib app guidelines
+
+
+### Description
+Poch'Lib is a responsive single page book storage app with two main features : 
+* Search and display books from Google Books API's
+* Add or remove a book to a favorite list
+***
+### List of technologies used within the project:
+* HTML5
+* CSS3
+* SASS Preprocessor
+* JAVASCRIPT
+* JQUERY Framework
+***
+
+
+
+
+
+
+* [Technologie name](https://example.com): Version 12.3 
+* [Technologie name](https://example.com): Version 2.34
+* [Library name](https://example.com): Version 1234
+```
+$ git clone https://example.com
+```
