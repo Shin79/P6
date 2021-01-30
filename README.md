@@ -14,7 +14,7 @@ Poch'Lib is a responsive single page book storage app with two main features :
 * JQUERY Framework
 ***
 ### How to install
-
+1. Clone the project with the command ```git clone https://github.com/Shin79/P6.git```
 
 
 
