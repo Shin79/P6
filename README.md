@@ -13,6 +13,7 @@ Poch'Lib is a responsive single page book storage app with two main features :
 * JAVASCRIPT
 * JQUERY Framework
 ***
+### How to install
 
 
 
