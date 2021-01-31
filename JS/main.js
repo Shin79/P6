@@ -63,7 +63,7 @@ $(function(){
                         if(data.totalItems === 0){
                             $(".errorMessage").text("Désolé, aucun livre n'a été trouvé");
                         }else{
-                            $searchResults.before("<h2 class='searchR'>Résultats de recherche</h2>");
+                            $searchResults.before("<h2 class='searchR'><hr/>Résultats de recherche</h2>");
                             $(data.items).each(function(i){      // for(var i=0;i<data.items.length;i++){
                                 console.log(data.items[i]);
                                 console.log("Titre : " + data.items[i].volumeInfo.title);
