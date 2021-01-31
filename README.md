@@ -15,14 +15,11 @@ Poch'Lib is a responsive single page book storage app with two main features :
 ***
 ### How to install
 1. Clone the project with the command ```git clone https://github.com/Shin79/P6.git```
+2. From the new folder, open the file ```index.html``` with your browser
 
-
-
-
-
-* [Technologie name](https://example.com): Version 12.3 
-* [Technologie name](https://example.com): Version 2.34
-* [Library name](https://example.com): Version 1234
-```
-$ git clone https://example.com
-```
+#### To install SASS
+* If you use node.js, you can run the command ```npm install -g sass```
+* Run ```sass --watch input.scss : output.css``` (The watch flag tells Sass to watch your source files for changes, and re-compile CSS each time you save your Sass)
+* Run ```npm run sass```
+* You can also download the SASS package on their GitHub repository : (https://github.com/sass/dart-sass/releases/tag/1.32.5)
+***
