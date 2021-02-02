@@ -14,8 +14,8 @@ function createBook(book){
     $titleOutput = $('<span class="bookTitle">' + book.volumeInfo.title + '</span>');
     $bookId = $('<h5>Id : </h5>');
     $idOutput = $('<span class="bookId">' + book.id + '</span>');
-    $bookAuthor = $('<h5>Auteur :                          </h5>');
-    $authorOutput = $('<span class="bookAuthor">     ' + book.volumeInfo.authors + '</span>')
+    $bookAuthor = $('<h5>Auteur :  </h5>');
+    $authorOutput = $('<span class="bookAuthor"> ' + book.volumeInfo.authors + '</span>')
     $bookDescription = $('<h5 class="descr">Description : </h5>');
     let txt;
     if(book.volumeInfo.description){
@@ -64,13 +64,9 @@ var pochList = [];
 
 // On créé une fonction de suppression de livre de la liste des favoris
 function deleteBook(bookId) {
-    //pochList = pochList.filter(book => book.id === bookId);
-    //console.log(pochList[0].id);
-    //$('tr').remove("." + pochList[0].id);
+    
     pochList = pochList.filter(book => book.id !== bookId);
     console.log(pochList);
-    //if(pochList.length>0){
-    //    console.log(pochList);
         sessionStorage.setItem('savedBooks', JSON.stringify(pochList));
         console.log(sessionStorage);
         alert( "Le livre a été supprimé de vos favoris ");
@@ -78,9 +74,8 @@ function deleteBook(bookId) {
         let  imgId = document.getElementById(bookId);
         var src = ($("#" + bookId).attr("src") === "logo/bookmark-regular.svg") ? "logo/bookmark-solid.svg":"logo/bookmark-regular.svg";
         $( "#" + bookId).attr("src",src);
-    //} else{
       if(pochList.length<1){
-        $("#table").hide();
+          $("#table").hide();
       }
     
 }
@@ -114,7 +109,7 @@ function bookStorage(bookId){
   console.log(bookSaved);
   if (pochList !== undefined) {
     console.log(pochList);
-    if (pochList.some(book => book.id === bookSaved.id)) {  // On vérifie que l'ID du livre n'est pas déjà présent dans les données enregistrées
+    if (pochList.some(book => book.id === bookSaved.id)) {      // On vérifie que l'ID du livre n'est pas déjà présent dans les données enregistrées
       alert("Vous ne pouvez ajouter deux fois le même livre!");
     } else {
       pochList.push(bookSaved);

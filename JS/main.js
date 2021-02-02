@@ -7,9 +7,9 @@ $(function(){
     var $form = $("<section id='formulaire'></section>");
     $(".h2").after($form);
     $form.append("<form action='' method='get' id='mainForm'><fieldset><legend>Insérer le titre et l'auteur : </legend></fieldset></form>");
-    var $title = $("fieldset").append("<label for='title'>Titre du livre * : </label><br/><input type='text' id='titleInput' name='title' required/>"); 
-    var $author = $("fieldset").append("<br/><label for='author'>Auteur * : </label><br/><input type='text' id='authorInput' name='author'required/><br>"); 
-    var $search = createButton("submit",'search',"Rechercher").appendTo("fieldset");
+    $("fieldset").append("<label for='title'>Titre du livre * : </label><br/><input type='text' id='titleInput' name='title' required/>"); 
+    $("fieldset").append("<br/><label for='author'>Auteur * : </label><br/><input type='text' id='authorInput' name='author'required/><br>"); 
+    createButton("submit",'search',"Rechercher").appendTo("fieldset");
     $('.search').after('<div class="errorMessage"></div>');
     var $cancel = createButton("reset",'cancel',"Annuler");
     $cancel.appendTo("fieldset");
@@ -82,8 +82,7 @@ $(function(){
                     }
                 })
                 $searchResults.show();
-                //$(".search").prop("disabled",true);
-        } else{                                                             // Sinon, on lance un message d'erreur 
+        } else{   // Sinon, on lance un message d'erreur 
             $(".errorMessage").text("Informations manquantes. Vous devez remplir les deux champs");
         }
     })
