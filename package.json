@@ -1,0 +1,20 @@
+{
+  "name": "p6_goto_shin_pochlib",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sass": "sass --watch ./dart-sass/sass/style.scss:style.css",
+    "compressed" : "sass ./dart-sass/sass/style.scss:style.css -w --output-style=compressed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shin79/P6.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shin79/P6/issues"
+  },
+  "homepage": "https://github.com/Shin79/P6#readme"
+}
